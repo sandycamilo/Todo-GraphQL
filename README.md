@@ -18,6 +18,7 @@ GraphQL todo app
 ## Mutation 
 - addTodo - creates a new todo and returns that todo
 - completeTodo - marks a todo complete and returns that todo
+- deleteTodo - deletes a todo and returns that todo
 
 ## Queries 
 
@@ -37,25 +38,59 @@ query{
 ### getTodo
 
 ```
+query{
+  getTodo(id: 1){
+		name
+  }
+}
 ```
 
 ### getCompletedTodos 
+
 ```
+query{
+  getCompletedTodos(completed: true){
+    name
+    date
+    completed
+    id
+  }
+}
 ```
 
 ### addTodo
+
 ```
+ADD 
 mutation {
-  addTodo(name:"run", completed: "yes", date:"May 13 2021", id: 22) {
+  addTodo(name:"drink", completed: false, date:"May 22 2022") {
     name
-    completed
     date
     id
   }
 }
-
 ```
 
 ### completeTodo 
+
 ```
+mutation {
+  completeTodo(id:1, completed: true) {
+    name
+    completed
+  }
+}
+```
+
+### deleteTodo
+
+```
+mutation {
+  deleteTodo(id: 1) {
+    name
+    date
+    completed
+    id
+  }
+}
 ```
