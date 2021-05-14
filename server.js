@@ -5,7 +5,7 @@ const { buildSchema } = require('graphql')
 // start schema 
 const schema = buildSchema(`
 type Todo {
-	name: String!
+  name: String!
   completed: Boolean!
   date: String!
   id: ID!
@@ -20,7 +20,7 @@ type Query {
 type Mutation {
   addTodo(name: String!, completed: Boolean!, date: String!): Todo!
   deleteTodo(id: ID!): Todo!
-	completeTodo(id: ID!, completed: Boolean!): Todo!
+  completeTodo(id: ID!, completed: Boolean!): Todo!
 }
 `)
 
@@ -34,9 +34,9 @@ const todoList = [{
 
 // set up resolver 
 const root = {
-	getAllTodos: () => {
-		return todoList
-	},
+  getAllTodos: () => {
+    return todoList
+  },
   addTodo: ({ name, completed, date }) => {
     const todo = { name, completed, date, id: todoList.length}
     todoList.push(todo)
