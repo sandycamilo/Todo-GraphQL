@@ -6,29 +6,30 @@ const { buildSchema } = require('graphql')
 const schema = buildSchema(`
 type Todo {
 	name: String!
-  completed: String!
+  completed: Boolean!
   date: String!
-  id: Int!
+  id: ID!
 }
 
 type Query {
-  getAllTodos(name: String, completed: String!, date: String, id: Int!): [Todo!]!
-  getTodo(name: String!, completed: String!): Todo!
-  getCompletedTodos(completed: String!): [Todo!]!
+  getAllTodos: [Todo!]!
+  getTodo(id: ID!): Todo!
+  getCompletedTodos(completed: Boolean!): [Todo!]!
 }
 
 type Mutation {
-  addTodo(name: String!, completed: String!, date: String!, id: Int!): Todo!
-	completeTodo(completed: String!): Todo!
+  addTodo(name: String!, completed: Boolean!, date: String!): Todo!
+  deleteTodo(id: ID!): Todo!
+	completeTodo(id: ID!, completed: Boolean!): Todo!
 }
 `)
 
 // list
-const todoList = [ {
-  name: "run", 
-  completed: "yes sir", 
-  date: "May 13 2021",
-  id: "22"
+const todoList = [{
+  name: "hw",
+  date: "July 22 2022",
+  id: "1", 
+  completed: false
 }]
 
 // set up resolver 
@@ -36,20 +37,30 @@ const root = {
 	getAllTodos: () => {
 		return todoList
 	},
-  addTodo: ({ name, completed, date, id }) => {
-    const todo = { name, completed, date, id }
+  addTodo: ({ name, completed, date }) => {
+    const todo = { name, completed, date, id: todoList.length}
     todoList.push(todo)
     return todo
+  },
+  deleteTodo: ({ id }) => {
+    const todoIndex = todoList.findIndex(todo => todo.id === id)
+    const todo = todoList[todoIndex]
+    todoList.splice(todoIndex, 1)
+    return todo
+  },
+  completeTodo: ({ id, completed }) => {
+    const todo = todoList.find(todo => todo.id === id)
+    todo.completed = completed
+    return todo
+  },
+  getCompletedTodos: ({ completed }) => {
+    const completedtodos = todoList.filter(todo => todo.completed === completed)
+    return completedtodos
+  },
+  getTodo: ({ id }) => {
+    const todo = todoList.find(todo => todo.id === id)
+    return todo
   }
-  // completedTodo: () => {
-  //     return 
-  // },
-  // getCompletedTodos: () => {
-  //   return
-  // },
-  // getTodo: () => {
-  //   return
-  // }
 }
 
 // Create an express app
